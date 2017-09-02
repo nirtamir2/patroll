@@ -3,20 +3,25 @@
     <button @click="getCurrentLocation">get location</button>
     <span>
       <h1>
-        {{this.longitude}}, {{this.latitude}}
+        {{this.latitude}} , {{this.longitude}}
       </h1>
     </span>
+    <google-map :longitude= "longitude" :latitude="latitude"></google-map>
   </div>
 </template>
 
 <script>
+import GoogleMap from './GoogleMap'
 export default {
-  name: 'app',
+  name: 'Hello',
   data() {
     return {
       longitude: "",
       latitude: ""
     }
+  },
+  components: {
+    GoogleMap
   },
   methods: {
     getCurrentLocation() {
@@ -24,8 +29,7 @@ export default {
         navigator.geolocation.getCurrentPosition((position) => {
           [this.latitude, this.longitude] = [position.coords.latitude, position.coords.longitude];
           console.log(position.coords.latitude, position.coords.longitude);
-        }
-        )
+        })
       }
     },
     watchCurrentLocation() {
