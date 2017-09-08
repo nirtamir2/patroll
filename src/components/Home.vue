@@ -1,21 +1,22 @@
 <template>
   <div>
-    <google-map :longitude="longitude" :latitude="latitude"></google-map>
+    <google-map></google-map>
+    <markerList></markerList>
   </div>
 </template>
 
 <script>
 import GoogleMap from './GoogleMap'
+import MarkerList from './MarkerList'
 export default {
   name: 'Home',
   data() {
     return {
-      longitude: "",
-      latitude: ""
     }
   },
   components: {
-    GoogleMap
+    GoogleMap,
+    MarkerList
   },
   methods: {
   }
