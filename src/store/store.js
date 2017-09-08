@@ -8,7 +8,8 @@ Vue.use(Vuex)
 // each Vuex instance is just a single state tree.
 const state = {
   markers: [],
-  plcaeHistory: []
+  plcaeHistory: [],
+  center: { lat: 31.97888550406638, lng: 34.78511333465576 },
 }
 
 // mutations are operations that actually mutates the state.
@@ -28,11 +29,14 @@ const mutations = {
     const newMarker = { ...state.markers[index], position: newLoc }
     Vue.set(state.markers, index, newMarker);
   },
-  setWalked(state, marker) { 
+  setWalked(state, marker) {
     const index = state.markers.findIndex(m => (m === marker))
     const walkedMarker = { ...state.markers[index], isWalked: true }
-    Vue.set(state.markers,index, walkedMarker);
+    Vue.set(state.markers, index, walkedMarker);
   },
+  changeCenter(state, newCenter) {
+    state.center = newCenter;
+  }
 }
 
 // actions are functions that cause side effects and can involve
@@ -44,25 +48,27 @@ const actions = {
   },
   removeMarker: ({ commit }, marker) => commit('removeMarker', marker),
   changeMarkerLocation: ({ commit }, payload) => {
-    commit('changeMarkerLocation', payload)},
+    commit('changeMarkerLocation', payload)
+  },
   markWalked: ({ commit, state }, loc) => {
     const notWalkedMarkers = [...state.markers.filter(marker => !marker.isWalked)]
-    console.log(notWalkedMarkers);
-for(let notWalkedMarker of notWalkedMarkers){
-        const distance = locationService.getDistance(loc, notWalkedMarker.position)
+    for (let notWalkedMarker of notWalkedMarkers) {
+      const distance = locationService.getDistance(loc, notWalkedMarker.position)
       if (distance < 20) {
         console.log(distance);
         commit('setWalked', notWalkedMarker);
       }
     }
   },
+  centerChanged: ({ commit }, newCenter) =>
+  { commit('changeCenter', newCenter) }
 }
 
 // getters are functions
 const getters = {
   walkedMarkers: state => state.markers.filter(marker => marker.isWalked),
   notWalkedMarkers: state => state.markers.filter(marker => !marker.isWalked),
-  
+
 }
 
 // A Vuex instance is created by combining the state, mutations, actions,
