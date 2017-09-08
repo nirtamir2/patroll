@@ -1,54 +1,49 @@
 <template>
     <div>
-        <gmap-map :center="center" :zoom="20" style="width: 100%; height: 300px" @click="addMarker">
-            <gmap-marker :key="index" v-for="(m, index) in markers" 
-            :position="m.position" :icon="m.icon" 
-            :clickable="true"  @click="markers.splice(index,1)"
-             :draggable="true" @dragend="changeMarkerPosition($event, m)">
-             </gmap-marker>
+        <gmap-map :center="center" :zoom="20" style="width: 100%; height: 300px" @click="addMarker" 
+       >
+            <gmap-marker  v-for="(m, index) in markers" :key="index" :position.sync="m.position" :icon="getIcon(m)" :clickable="true" @click="removeMarker(m)" :draggable="true" @dragend="changeMarkerPosition($event, m)">
+            </gmap-marker>
         </gmap-map>
         <h1>markers: </h1>
-        <ul v-for="(m, index) in markers">
-            <li @click="moveToMarker(m)" :class="{ green: m.hasOwnProperty('icon') }">{{m.position.lat}}, {{m.position.lng}}</li>
+        <ul>
+            <li  v-for="(m, index) in markers" :key="index"
+             @click="moveToMarker(m)" :class="{ green: m.isWalked }">{{m.position.lat}}, {{m.position.lng}}</li>
         </ul>
     </div>
 </template>
 <script>
-import locationService from './../services/location.service'
+import { mapState, mapActions } from 'vuex'
 export default {
     data() {
         return {
             center: { lat: 31.97888550406638, lng: 34.78511333465576 },
-            markers: [{position: {lat:31.978841167530444, lng:34.78518381714821}},
-            {position: {lat:50, lng:1}},
-            {position: {lat:50, lng:0}}]
         }
     },
+    computed: {...mapState([
+        'markers'
+    ])},
     methods: {
-        addMarker(loc) {
-            this.markers.push({ position: { lat: loc.latLng.lat(), lng: loc.latLng.lng() } })
-        }
-        ,
+        ...mapActions(['addMarker','removeMarker']),
         getCurrentLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition((pos) => {
                     const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude }
                     this.center = newPos
-                    for (let marker of this.markers) {
-                        const distance = locationService.getDistance(newPos, marker.position)
-                        if (distance < 20) {
-                            marker.icon = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-                        }
-                    }
+                    this.$store.dispatch('markWalked', newPos)
                 })
             }
         },
-        changeMarkerPosition(event,marker) {
-            const newLoc = { lat: event.latLng.lat(), lng: event.latLng.lng() }
-            marker.position = newLoc
+        getIcon(marker) {
+            return marker.isWalked ? '/static/img/beachflag.png' : ''
         },
-        moveToMarker(m)
-        {
+        changeMarkerPosition(event, marker) {
+            const newLoc = { lat: event.latLng.lat(), lng: event.latLng.lng() }
+            const oldLoc = marker.position
+            console.log(oldLoc, newLoc);
+            this.$store.dispatch('changeMarkerLocation', {oldLoc, newLoc})
+        },
+        moveToMarker(m) {
             this.center = m.position;
         }
     },
@@ -58,8 +53,8 @@ export default {
 }
 </script>
 <style scoped>
-    .green{
-        background-color: green;
-    }
+.green {
+    background-color: lightgreen;
+}
 </style>
 

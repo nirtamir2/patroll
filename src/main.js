@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import './firebase.js'
+import store from './store/store.js'
 
 Vue.config.productionTip = false
 
@@ -19,6 +20,7 @@ Vue.use(VueGoogleMaps, {
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

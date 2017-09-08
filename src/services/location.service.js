@@ -9,11 +9,12 @@ function getDistance(latLng1, latLng2) {
         Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
-    return d;
+    return d * 1000;
 }
 
 function toRad(Value) {
     return Value * Math.PI / 180;
 }
+
 
 export default { getDistance }
