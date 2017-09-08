@@ -19,7 +19,9 @@ export default {
     data() {
         return {
             center: { lat: 31.97888550406638, lng: 34.78511333465576 },
-            markers: []
+            markers: [{position: {lat:31.978841167530444, lng:34.78518381714821}},
+            {position: {lat:50, lng:1}},
+            {position: {lat:50, lng:0}}]
         }
     },
     methods: {
@@ -42,7 +44,7 @@ export default {
             }
         },
         changeMarkerPosition(event,marker) {
-            const newLoc = { lat: event.latLng.lat(), lng: a.latLng.lng() }
+            const newLoc = { lat: event.latLng.lat(), lng: event.latLng.lng() }
             marker.position = newLoc
         },
         moveToMarker(m)

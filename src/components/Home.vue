@@ -1,19 +1,19 @@
 <template>
   <div>
-    <button @click="getCurrentLocation">get location</button>
     <span>
+      <button @click="getCurrentLocation">get location</button>
       <h1>
         {{this.latitude}} , {{this.longitude}}
       </h1>
     </span>
-    <google-map :longitude= "longitude" :latitude="latitude"></google-map>
+    <google-map :longitude="longitude" :latitude="latitude"></google-map>
   </div>
 </template>
 
 <script>
 import GoogleMap from './GoogleMap'
 export default {
-  name: 'Hello',
+  name: 'Home',
   data() {
     return {
       longitude: "",
@@ -28,18 +28,9 @@ export default {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
           [this.latitude, this.longitude] = [position.coords.latitude, position.coords.longitude];
-          console.log(position.coords.latitude, position.coords.longitude);
         })
       }
     },
-    watchCurrentLocation() {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.watchPosition((position) => {
-          [this.latitude, this.longitude] = [position.coords.latitude, position.coords.longitude];
-          console.log(position.coords.latitude, position.coords.longitude);
-        })
-      }
-    }
   }
 }
 </script>
