@@ -1,7 +1,10 @@
 <template>
     <div>
         <gmap-map :center="center" :zoom="20" style="width: 100%; height: 300px" @click="addMarker">
-            <gmap-marker v-for="(m, index) in markers" :key="index" :position.sync="m.position" :icon="getIcon(m)" :clickable="true" @click="removeMarker(m)" :draggable="true" @dragend="changeMarkerPosition($event, m)">
+            <gmap-marker v-for="(m, index) in markers" :key="index" 
+            :position.sync="m.position" :icon="getIcon(m)" 
+            :clickable="true" @click="removeMarker(m)"
+             :draggable="true" @dragend="changeMarkerPosition($event, m)">
             </gmap-marker>
         </gmap-map>
     </div>
